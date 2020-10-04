@@ -6,8 +6,10 @@ import {
   Button,
   TextInput,
   ScrollView,
+  FlatList,
 } from 'react-native';
 
+import ListItem from './components/ListItem';
 export default function App() {
   const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
@@ -18,39 +20,36 @@ export default function App() {
 
   const submitHandler = () => {
     enteredGoal &&
-      setCourseGoals((currentGoals) => [...currentGoals, enteredGoal]);
-
-    console.log(courseGoals);
+      setCourseGoals((currentGoals) => [
+        ...currentGoals,
+        {
+          key: Math.random().toString(),
+          value: enteredGoal,
+        },
+      ]);
   };
 
   const clearHandler = () => {
     setCourseGoals([]);
-
-    console.log(courseGoals);
   };
 
   return (
-    <ScrollView>
-      <View style={styles.screen}>
-        <View style={styles.inputContainer}>
-          <TextInput
-            placeholder="Enter you goal here..."
-            style={styles.input}
-            onChangeText={onChangeHandler}
-          />
-          <Button title="ADD" onPress={submitHandler} />
-          <Button title="Clear" onPress={clearHandler} />
-        </View>
-
-        <ScrollView>
-          {courseGoals.map((goal, idx) => (
-            <View key={idx} style={styles.goalItem}>
-              <Text>{goal}</Text>
-            </View>
-          ))}
-        </ScrollView>
+    <View style={styles.screen}>
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Enter you goal here..."
+          style={styles.input}
+          onChangeText={onChangeHandler}
+        />
+        <Button title="ADD" onPress={submitHandler} />
+        <Button title="Clear" onPress={clearHandler} />
       </View>
-    </ScrollView>
+
+      <FlatList
+        data={courseGoals}
+        renderItem={(itemData) => <ListItem title={itemData.item.value} />}
+      />
+    </View>
   );
 }
 
