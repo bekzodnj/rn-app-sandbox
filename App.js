@@ -10,44 +10,57 @@ import {
 } from 'react-native';
 
 import ListItem from './components/ListItem';
+import GoalInput from './components/GoalInput';
+
 export default function App() {
-  const [enteredGoal, setEnteredGoal] = useState('');
   const [courseGoals, setCourseGoals] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  const onChangeHandler = (newGoalText) => {
-    setEnteredGoal(newGoalText);
-  };
-
-  const submitHandler = () => {
+  const submitHandler = (enteredGoal) => {
     enteredGoal &&
       setCourseGoals((currentGoals) => [
         ...currentGoals,
         {
-          key: Math.random().toString(),
+          id: Math.random().toString(),
           value: enteredGoal,
         },
       ]);
+
+    setIsModalVisible(false);
   };
 
   const clearHandler = () => {
     setCourseGoals([]);
   };
 
+  const closeModalHandler = () => {
+    setIsModalVisible(false);
+  };
+
+  const removeGoalHandler = (goalId) => {
+    setCourseGoals((currentGoals) => {
+      return currentGoals.filter((goal) => goal.id !== goalId);
+    });
+  };
+
   return (
     <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder="Enter you goal here..."
-          style={styles.input}
-          onChangeText={onChangeHandler}
-        />
-        <Button title="ADD" onPress={submitHandler} />
-        <Button title="Clear" onPress={clearHandler} />
-      </View>
-
+      <Button title="Add New Goal" onPress={() => setIsModalVisible(true)} />
+      <GoalInput
+        submitHandler={submitHandler}
+        clearHandler={clearHandler}
+        visible={isModalVisible}
+        onCancel={closeModalHandler}
+      />
       <FlatList
         data={courseGoals}
-        renderItem={(itemData) => <ListItem title={itemData.item.value} />}
+        renderItem={(itemData) => (
+          <ListItem
+            title={itemData.item.value}
+            onDelete={removeGoalHandler}
+            id={itemData.item.id}
+          />
+        )}
       />
     </View>
   );
@@ -57,18 +70,7 @@ const styles = StyleSheet.create({
   screen: {
     padding: 20,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  input: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    padding: 10,
-    margin: 10,
-    width: '60%',
-  },
+
   goalItem: {
     padding: 10,
     borderColor: 'black',
