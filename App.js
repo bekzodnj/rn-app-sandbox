@@ -1,81 +1,49 @@
 import React, {useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Button,
-  TextInput,
-  ScrollView,
-  FlatList,
-} from 'react-native';
+import {StyleSheet, Text, View, Button} from 'react-native';
 
-import ListItem from './components/ListItem';
-import GoalInput from './components/GoalInput';
+import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native';
 
-export default function App() {
-  const [courseGoals, setCourseGoals] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+import {createStackNavigator} from '@react-navigation/stack';
 
-  const submitHandler = (enteredGoal) => {
-    enteredGoal &&
-      setCourseGoals((currentGoals) => [
-        ...currentGoals,
-        {
-          id: Math.random().toString(),
-          value: enteredGoal,
-        },
-      ]);
-
-    setIsModalVisible(false);
-  };
-
-  const clearHandler = () => {
-    setCourseGoals([]);
-  };
-
-  const closeModalHandler = () => {
-    setIsModalVisible(false);
-  };
-
-  const removeGoalHandler = (goalId) => {
-    setCourseGoals((currentGoals) => {
-      return currentGoals.filter((goal) => goal.id !== goalId);
-    });
-  };
-
+function HomeScreen({navigation}) {
   return (
-    <View style={styles.screen}>
-      <Button title="Add New Goal" onPress={() => setIsModalVisible(true)} />
-      <GoalInput
-        submitHandler={submitHandler}
-        clearHandler={clearHandler}
-        visible={isModalVisible}
-        onCancel={closeModalHandler}
-      />
-      <FlatList
-        data={courseGoals}
-        renderItem={(itemData) => (
-          <ListItem
-            title={itemData.item.value}
-            onDelete={removeGoalHandler}
-            id={itemData.item.id}
-          />
-        )}
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Home Screen</Text>
+      <Button
+        title="Go to Details"
+        onPress={() => navigation.navigate('Details')}
       />
     </View>
   );
 }
 
+function DetailsScreen() {
+  return (
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <Text>Details Screen</Text>
+    </View>
+  );
+}
+
+const Stack = createStackNavigator();
+
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Overview'}}
+        />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 const styles = StyleSheet.create({
   screen: {
     padding: 20,
-  },
-
-  goalItem: {
-    padding: 10,
-    borderColor: 'black',
-    backgroundColor: '#ccc',
-    borderWidth: 1,
-    marginVertical: 10,
   },
 });
