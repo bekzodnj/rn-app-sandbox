@@ -1,8 +1,12 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, Button} from 'react-native';
+import 'react-native-gesture-handler';
 
 import ProductsOverviewScreen from './screens/shop/ProductsOverviewScreen';
-import 'react-native-gesture-handler';
+
+// Navigation import
+import ShopNavigator from './navigation/ShopNavigator';
+
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
@@ -45,16 +49,7 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={ProductsOverviewScreen}
-            options={{title: 'Overview'}}
-          />
-          <Stack.Screen name="Details" component={DetailsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <ShopNavigator />
     </Provider>
   );
 }
