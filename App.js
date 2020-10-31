@@ -13,14 +13,17 @@ import {createStackNavigator} from '@react-navigation/stack';
 /* Redux setup starts */
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 import productsReducer from './store/reducers/products';
+import cartReducer from './store/reducers/cart';
 
 const rootreducer = combineReducers({
   products: productsReducer,
+  cart: cartReducer,
 });
 
-const store = createStore(rootreducer);
+const store = createStore(rootreducer, composeWithDevTools());
 
 /*Redux setup ends*/
 
